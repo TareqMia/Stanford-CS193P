@@ -55,7 +55,7 @@ class EmojiMemoryGame: ObservableObject {
     
     private static var themes: [Theme] = {
         var themes = [Theme]()
-        let numberOfPairsOfCards = 8
+        let numberOfPairsOfCards = 5
         
         themes.append(createTheme("Vehicles", vehicleEmojis, numberOfPairsOfCards))
         themes.append(createTheme("Animals", animalEmojis, numberOfPairsOfCards))
@@ -123,5 +123,9 @@ class EmojiMemoryGame: ObservableObject {
         theme = EmojiMemoryGame.getTheme()
         model = EmojiMemoryGame.createMemoryGame(of: theme)
         color = EmojiMemoryGame.getColor(theme.color)
+    }
+    
+    func shuffle() -> Void {
+        model.shuffle()
     }
 }
