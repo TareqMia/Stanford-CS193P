@@ -4,6 +4,8 @@ Coursework for Stanford CS193p: Developing Apps for iOS
 
 ## Updated Memorize with Animations
 
+https://user-images.githubusercontent.com/39747003/213886008-d7d2b617-c221-4d69-a80b-2ce776fcea56.mp4
+
 ## Assignment 3: Set
 
 
