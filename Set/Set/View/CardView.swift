@@ -11,7 +11,7 @@ struct CardView: View {
     
     let card: GameOfSet.Card
     
-    private struct DrawingConstraints {
+    private struct DrawingConstants {
         static let cornerRadius: CGFloat = 15.0
         static let lineWidth: CGFloat = 3
         static let fontScale: CGFloat = 0.7
@@ -27,46 +27,28 @@ struct CardView: View {
     }
     
     private func font(in size: CGSize) -> Font {
-        .system(size: min(size.width, size.height) * DrawingConstraints.fontScale)
+        .system(size: min(size.width, size.height) * DrawingConstants.fontScale)
     }
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                let shape = RoundedRectangle(cornerRadius: DrawingConstraints.cornerRadius)
-                shape.fill().foregroundColor(.white)
-                if card.isMatched {
-                    shape.strokeBorder(.green, lineWidth: DrawingConstraints.lineWidth - 1)
-                    shape.fill().foregroundColor(.green).opacity(DrawingConstraints.effectOpacity)
+                VStack {
+                    ForEach(0..<card.cardContent.numberOfShapes, id: \.self) { _ in
+                        createSymbol(for: card)
+                    }
                 }
-                else {
-                    if card.isSelected {
-                        shape.strokeBorder(.orange, lineWidth: DrawingConstraints.lineWidth - 1)
-                    } else if card.isNotMatched {
-                        shape.strokeBorder(.gray, lineWidth: DrawingConstraints.lineWidth - 1)
-                        shape.fill().foregroundColor(.gray).opacity(DrawingConstraints.effectOpacity)
-                    }
-                    else {
-                        shape.strokeBorder(.cyan, lineWidth: DrawingConstraints.lineWidth - 1)
-                    }
-                    
-                    VStack {
-                        ForEach(0..<card.cardContent.numberOfShapes, id: \.self) { _ in
-                            createSymbol(for: card)
-                        }
-                    }
-                    .padding()
-                }
+                .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
+                .cardify(isMatched: card.isMatched, isSelected: card.isSelected, isNotMatched: card.isNotMatched, isDealt: card.isDealt)
             }
         }
     }
-    
     
     @ViewBuilder
     private func createSymbol(for card: GameOfSet.Card) -> some View {
         switch card.cardContent.shape {
         case .roundedRectangle:
-            createSymbolView(of: card.cardContent, shape: RoundedRectangle(cornerRadius: DrawingConstraints.symbolCornerRadius))
+            createSymbolView(of: card.cardContent, shape: RoundedRectangle(cornerRadius: DrawingConstants.symbolCornerRadius))
         case .diamond:
             createSymbolView(of: card.cardContent, shape: Diamond())
         case .squiggle:
@@ -81,16 +63,16 @@ struct CardView: View {
             
         case .filled:
             shape.fill().foregroundColor(symbol.color.getColor())
-                .aspectRatio(DrawingConstraints.symbolAspectRatio, contentMode: .fit).opacity(DrawingConstraints.symbolOpacity)
+                .aspectRatio(DrawingConstants.symbolAspectRatio, contentMode: .fit).opacity(DrawingConstants.symbolOpacity)
             
         case .shaded:
             StripesView(shape: shape, color: symbol.color.getColor())
-                .aspectRatio(DrawingConstraints.symbolAspectRatio, contentMode: .fit).opacity(DrawingConstraints.symbolOpacity)
+                .aspectRatio(DrawingConstants.symbolAspectRatio, contentMode: .fit).opacity(DrawingConstants.symbolOpacity)
         case .stroked:
-            shape.stroke(lineWidth: DrawingConstraints.defaultLineWidth)
+            shape.stroke(lineWidth: DrawingConstants.defaultLineWidth)
                 .foregroundColor(symbol.color.getColor())
-                .aspectRatio(DrawingConstraints.symbolAspectRatio,
-                             contentMode: .fit).opacity(DrawingConstraints.symbolOpacity)
+                .aspectRatio(DrawingConstants.symbolAspectRatio,
+                             contentMode: .fit).opacity(DrawingConstants.symbolOpacity)
         }
         
     }
@@ -99,6 +81,6 @@ struct CardView: View {
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
         let vm = GameOfSet()
-        CardView(card: vm.cards[3])
+        CardView(card: vm.deck[3])
     }
 }

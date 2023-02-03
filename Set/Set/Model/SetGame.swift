@@ -9,53 +9,72 @@ import Foundation
 
 struct SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymbols> where CardSymbolShape: Hashable, CardSymbolColor: Hashable, CardSymbolPattern: Hashable, NumberOfSymbols: Hashable {
     
-    private(set) var cards: [Card]
+    private(set) var deck: [Card]
+    private(set) var cardsInPlay: [Card]
+    private(set) var discardPile: [Card]
     private var initialNumberOfCards: Int
     private(set) var numberOfCardsPlayed = 0
     private(set) var toatlNumberOfCards: Int
-    private var selectedCards: [Card] = []
+    private(set) var selectedCards: [Card] = []
     private let createCardContent: (Int) -> Card.CardContent
     private(set) var score = 0
     
     
     init(initialNumberOfCards: Int, totalNumberOfCards: Int, createCardContent: @escaping (Int) -> SetGame.Card.CardContent) {
-        cards = []
+        deck = []
+        cardsInPlay = []
+        discardPile = []
         self.toatlNumberOfCards = totalNumberOfCards
         self.initialNumberOfCards = initialNumberOfCards
         self.createCardContent = createCardContent
         
-        for _ in 0..<initialNumberOfCards {
+        for _ in 0..<totalNumberOfCards {
             let content = createCardContent(numberOfCardsPlayed)
-            cards.append(Card(cardContent: content, id: numberOfCardsPlayed))
+            deck.append(Card(cardContent: content, id: numberOfCardsPlayed))
             numberOfCardsPlayed += 1
+        }
+        
+        for _ in 0..<initialNumberOfCards {
+            cardsInPlay.append(deck.removeFirst())
         }
         
     }
     
-    private mutating func resetSelectedCards() -> Void {
-        cards.indices.forEach({ cards[$0].isSelected = false })
+    mutating func addCardsToDiscardPile() -> Void {
+        let indices = cardsInPlay.indices.filter({ cardsInPlay[$0].isMatched })
+        
+        for index in indices.reversed() {
+            var card = cardsInPlay.remove(at: index)
+            card.isSelected = false
+            card.isMatched = false
+            discardPile.append(card)
+        }
+        
+        cardsInPlay.indices.forEach({ cardsInPlay[$0].isSelected = false })
         selectedCards = []
     }
     
     mutating func handleValidSet() -> Void {
+        
         if selectedCards.count ==  3  {
-            let indices = cards.indices.filter({ cards[$0].isSelected })
+            let indices = cardsInPlay.indices.filter({ cardsInPlay[$0].isSelected })
             for index in indices {
-                cards[index].isMatched = true
+                cardsInPlay[index].isMatched = true
             }
-            resetSelectedCards()
+            print("Valid set")
             score += 2
         }
         
     }
     
     mutating func handleInvalidSet() -> Void {
+        print("Invalid set")
         if selectedCards.count == 3 {
-            let indices = cards.indices.filter({ cards[$0].isSelected })
+            let indices = cardsInPlay.indices.filter({ cardsInPlay[$0].isSelected })
             for index in indices {
-                cards[index].isNotMatched = true
+                cardsInPlay[index].isNotMatched = true
             }
-            resetSelectedCards()
+            addCardsToDiscardPile()
             if score > 0 {
                 score -= 1
             }
@@ -64,10 +83,10 @@ struct SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymb
     }
     
     mutating func replaceCards() -> Void {
-        let indices = cards.indices.filter({ cards[$0].isMatched })
+        let indices = selectedCards.indices.filter({ cardsInPlay[$0].isMatched })
         for index in indices {
             let content = createCardContent(numberOfCardsPlayed)
-            cards[index] = Card(cardContent: content, id: numberOfCardsPlayed)
+            cardsInPlay[index] = Card(cardContent: content, id: numberOfCardsPlayed)
             numberOfCardsPlayed += 1
         }
         
@@ -75,19 +94,19 @@ struct SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymb
     
     mutating func choose(card: Card) -> Void {
         
-        let notMatchedIndices = cards.indices.filter({ cards[$0].isNotMatched })
+        let notMatchedIndices = cardsInPlay.indices.filter({ cardsInPlay[$0].isNotMatched })
         for index in notMatchedIndices {
-            cards[index].isNotMatched = false
+            cardsInPlay[index].isNotMatched = false
         }
         
-        if let index = cards.firstIndex(where: { $0.id == card.id } )  {
+        if let index = cardsInPlay.firstIndex(where: { $0.id == card.id } )  {
             if selectedCards.count < 3 {
                 if selectedCards.contains(where: { $0.id == card.id }) {
-                    cards[index].isSelected = false
+                    cardsInPlay[index].isSelected = false
                     selectedCards.remove(at: selectedCards.firstIndex(where: { $0.id == card.id })!)
                 } else {
-                    selectedCards.append(cards[index])
-                    cards[index].isSelected = true
+                    selectedCards.append(cardsInPlay[index])
+                    cardsInPlay[index].isSelected = true
                 }
             }
         }
@@ -116,41 +135,61 @@ struct SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymb
     
     mutating func dealThreeCards() -> Void {
         for _ in 0..<3 {
-            dealOneCard(at: cards.endIndex)
+            dealOneCard(at: cardsInPlay.endIndex)
         }
     }
     
     mutating private func dealOneCard(at index: Int) -> Void {
-        if numberOfCardsPlayed < toatlNumberOfCards {
-            let content = createCardContent(numberOfCardsPlayed)
-            cards.insert(Card(cardContent: content, id: numberOfCardsPlayed), at: index)
-            numberOfCardsPlayed += 1
-        }
+        cardsInPlay.insert(deck.removeFirst(), at: index)
     }
     
     mutating func startNewGame(cardContents: [Card.CardContent]) {
-        cards = []
+        deck = []
         numberOfCardsPlayed = 0
         for _ in 0..<initialNumberOfCards {
             let content = createCardContent(numberOfCardsPlayed)
-            cards.append(Card(cardContent: content, id: numberOfCardsPlayed))
+            deck.append(Card(cardContent: content, id: numberOfCardsPlayed))
             numberOfCardsPlayed += 1
         }
     }
     
-    struct Card: Identifiable {
+    mutating func shuffle() -> Void {
+        cardsInPlay.shuffle()
+    }
+    
+    mutating func dealCard(card: Card) {
+        if let index = cardsInPlay.firstIndex(where: { $0.id == card.id }) {
+            cardsInPlay[index].isDealt = true
+        }
+    }
+    
+    struct Card: Identifiable, Equatable, Hashable {
         
         let cardContent: CardContent
         let id: Int
         var isSelected = false
         var isMatched = false
         var isNotMatched = false
+        var isFaceUp = false
+        var isDealt = false
         
         struct CardContent {
             let shape: CardSymbolShape
             let color: CardSymbolColor
             let pattern: CardSymbolPattern
             let numberOfShapes: Int
+        }
+        
+        static func == (lhs: SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymbols>.Card, rhs: SetGame<CardSymbolShape, CardSymbolColor, CardSymbolPattern, NumberOfSymbols>.Card) -> Bool {
+            lhs.id == rhs.id
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        var hashValue: Int {
+            return id
         }
     }
     

@@ -15,6 +15,7 @@
 		4E3C216D296DBB1900DC6F94 /* SetGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3C216C296DBB1900DC6F94 /* SetGameView.swift */; };
 		4E3C2171296DBDC100DC6F94 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3C2170296DBDC100DC6F94 /* CardView.swift */; };
 		4E3C2173296E250100DC6F94 /* StripesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3C2172296E250100DC6F94 /* StripesView.swift */; };
+		4E9CDBA6297CBC4F00C24D4C /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9CDBA5297CBC4F00C24D4C /* Cardify.swift */; };
 		4ED014F6296B95A600D3FC2E /* SetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED014F5296B95A600D3FC2E /* SetApp.swift */; };
 		4ED014FA296B95AA00D3FC2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4ED014F9296B95AA00D3FC2E /* Assets.xcassets */; };
 		4ED014FD296B95AA00D3FC2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4ED014FC296B95AA00D3FC2E /* Preview Assets.xcassets */; };
@@ -29,6 +30,7 @@
 		4E3C216C296DBB1900DC6F94 /* SetGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetGameView.swift; sourceTree = "<group>"; };
 		4E3C2170296DBDC100DC6F94 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		4E3C2172296E250100DC6F94 /* StripesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripesView.swift; sourceTree = "<group>"; };
+		4E9CDBA5297CBC4F00C24D4C /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		4ED014F2296B95A600D3FC2E /* Set.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Set.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4ED014F5296B95A600D3FC2E /* SetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetApp.swift; sourceTree = "<group>"; };
 		4ED014F9296B95AA00D3FC2E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				4E3C216A296DB99600DC6F94 /* AspectVGrid.swift */,
 				4E3C216C296DBB1900DC6F94 /* SetGameView.swift */,
 				4E3C2170296DBDC100DC6F94 /* CardView.swift */,
+				4E9CDBA5297CBC4F00C24D4C /* Cardify.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				4E3C2160296B984300DC6F94 /* SetGame.swift in Sources */,
 				4ED014F6296B95A600D3FC2E /* SetApp.swift in Sources */,
 				4E3C2164296CEE8200DC6F94 /* Diamond.swift in Sources */,
+				4E9CDBA6297CBC4F00C24D4C /* Cardify.swift in Sources */,
 				4E3C2162296B9C3400DC6F94 /* GameOfSet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

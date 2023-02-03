@@ -70,10 +70,16 @@ class GameOfSet: ObservableObject {
         return SetGame(initialNumberOfCards: 12, totalNumberOfCards: cardContents.count) { cardContents[$0] }
     }
     
+    let initialNumberOfCards: Int = 12
+    
     @Published private var model = createSetGame()
     
-    var cards: [Card] {
-        model.cards
+    var deck: [Card] {
+        model.deck
+    }
+    
+    var cardsInPlay: [Card] {
+        model.cardsInPlay
     }
     
     var score: Int {
@@ -84,20 +90,22 @@ class GameOfSet: ObservableObject {
         model.numberOfCardsPlayed
     }
     
+    var discardPile: [Card] {
+        model.discardPile
+    }
+    
     // MARK: Intent(s)
     
-    func choose(card: Card) {
+    func choose(card: Card) -> Void {
         model.choose(card: card)
-       
         if model.checkForSet() {
             model.handleValidSet()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
-                self?.model.replaceCards()
-            }
         } else {
             model.handleInvalidSet()
         }
+        
     }
+    
     
     func dealThreeCards() -> Void {
         model.dealThreeCards()
@@ -106,4 +114,24 @@ class GameOfSet: ObservableObject {
     func startNewGame() -> Void {
         model = GameOfSet.createSetGame()
     }
+    
+    func shuffle() -> Void {
+        model.shuffle()
+    }
+    
+    func dealCard(card: Card) -> Void {
+        model.dealCard(card: card)
+    }
+    
+    func checkForSet() -> Bool {
+        model.checkForSet()
+    }
+    
+    func addCardsToDiscardPile() -> Void {
+        if model.checkForSet() && model.selectedCards.count == 3 {
+            model.addCardsToDiscardPile()
+        }
+        
+    }
+    
 }
