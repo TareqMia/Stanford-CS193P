@@ -3,6 +3,7 @@
 Coursework for Stanford CS193p: Developing Apps for iOS
 
 ## Assignment 4: Animated Set
+![Simulator Screen Recording - iPhone 14 Pro - 2023-02-02 at 22 01 04](https://user-images.githubusercontent.com/39747003/216502860-ccdd3d29-d3ec-4ff2-aed8-e20438aa12d2.gif)
 
 
 ## Updated Memorize with Animations
