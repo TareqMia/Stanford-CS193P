@@ -2,6 +2,12 @@
 
 Coursework for Stanford CS193p: Developing Apps for iOS
 
+## Assignemnt 5: EmojiArt
+![Simulator Screen Shot - iPad Pro (11-inch) (4th generation) - 2023-05-27 at 21 31 46](https://github.com/TareqMia/Stanford-CS193p/assets/39747003/4e85d8ec-c5e3-4987-8fe4-55c7739ab606)
+
+![Simulator Screen Shot - iPad Pro (11-inch) (4th generation) - 2023-05-27 at 21 29 21](https://github.com/TareqMia/Stanford-CS193p/assets/39747003/405021f9-1b72-492b-b190-0237766dd9b8)
+
+
 ## Assignment 4: Animated Set
 ![Simulator Screen Recording - iPhone 14 Pro - 2023-02-02 at 22 01 04](https://user-images.githubusercontent.com/39747003/216502860-ccdd3d29-d3ec-4ff2-aed8-e20438aa12d2.gif)
 
