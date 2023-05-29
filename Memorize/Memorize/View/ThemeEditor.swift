@@ -12,7 +12,7 @@ struct ThemeEditor: View {
     @Binding var theme: Theme
     @Environment(\.presentationMode) private var presentationMode
     
-    @State private var name: String = ""
+    @State private var name: String
     
     init(theme: Binding<Theme>) {
         self._theme = theme
@@ -45,7 +45,7 @@ struct ThemeEditor: View {
     
     var nameSection: some View {
         Section(header: Text("Name")) {
-            TextField("Name", text: self.$theme.name)
+            TextField("Name", text: $name)
         }
     }
     
@@ -118,6 +118,7 @@ struct ThemeEditor: View {
     }
     
     private func saveEdits() {
+        print(name)
         theme.name = name
         theme.numberOfPairsOfCards = numberOfPairsOfCards
     }

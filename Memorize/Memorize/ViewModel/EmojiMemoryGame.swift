@@ -12,7 +12,7 @@ class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
     @Published private var model: MemoryGame<String>
-    let theme: Theme
+     let theme: Theme
     
     static func createMemoryGame(of theme: Theme) -> MemoryGame<String> {
         let emojis = theme.emojis.map { String($0) }.shuffled()

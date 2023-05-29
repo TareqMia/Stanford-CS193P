@@ -43,7 +43,7 @@ struct ThemeChooser: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        store.insertTheme(named: "New", emojis: "")
+                        store.insertTheme(named: "new", emojis: "")
                         self.themeToEdit = store.themes.first
                         
                     } label: {
