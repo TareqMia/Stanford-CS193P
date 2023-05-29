@@ -11,121 +11,40 @@ class EmojiMemoryGame: ObservableObject {
     
     typealias Card = MemoryGame<String>.Card
     
-    private static var vehicleEmojis = ["🚗", "🛴", "✈️", "🛵", "⛵️", "🚎", "🚐",
-                                        "🚛", "🛻", "🏎", "🚂", "🚊", "🚀", "🚁",
-                                        "🚢", "🛶", "🛥", "🚞", "🚟", "🚃"]
-    
-    private static var animalEmojis = ["🐶", "🐱", "🐭", "🐹", "🐰", "🦊", "🐻", "🐼",
-                                       "🐻‍❄️", "🐨", "🐯", "🦁", "🐮", "🐷", "🐵"]
-    
-    private static var foodEmojis = ["🍔", "🥐", "🍕", "🥗", "🥟", "🍣", "🍪",
-                                     "🍚", "🍝", "🥙", "🍭", "🍤", "🥞", "🍦",
-                                     "🍛", "🍗"]
-    
-    private static var heartEmojis = ["❤️", "🧡", "💛",
-                                      "💚", "💙", "💜"]
-    
-    private static var sportsEmojis = ["⚽️", "🏀", "🏈", "⚾️", "🎾", "🏉", "🥏", "🏊",
-                                       "🏐", "🎱", "🏓", "🏸", "🏒", "🥊", "🚴‍♂️",
-                                       "🧗‍♀️", "🤺", "🏇", "🏋️‍♀️", "⛸", "⛷", "🤼","🏄"]
-    
-    private static var weatherEmojis = ["☀️", "🌪", "☁️", "☔️", "❄️"]
-    
-    
-    private static func createMemoryGame(of theme: Theme) -> MemoryGame<String> {
-        var numberOfPairsOfCards = theme.numberOfPairsOfCards
-        if theme.name == "Vehicles" || theme.name == "Animals" {
-            numberOfPairsOfCards = Int.random(in: 2...theme.emojis.count)
-        }
-        return MemoryGame(numberOfPairsOfCards: numberOfPairsOfCards) { theme.emojis[$0] }
-    }
-    
-    private static let colors = ["gray", "red", "green", "blue", "orange",
-                                 "yellow", "pink", "purple", "fushia", "beige", "gold"]
-    
-    
-    private static func createTheme(_ name: String, _ emojis: [String], _ numberOfPairsOfCards: Int)  -> Theme {
-        let color = colors.randomElement()
-        var pairsOfCards = numberOfPairsOfCards
-        if emojis.count < numberOfPairsOfCards {
-            pairsOfCards = emojis.count
-        }
-        return Theme(name: name, emojis: emojis, color: color!, numberOfPairsOfCards: pairsOfCards)
-    }
-    
-    private static var themes: [Theme] = {
-        var themes = [Theme]()
-        let numberOfPairsOfCards = 5
-        
-        themes.append(createTheme("Vehicles", vehicleEmojis, numberOfPairsOfCards))
-        themes.append(createTheme("Animals", animalEmojis, numberOfPairsOfCards))
-        themes.append(createTheme("Food", foodEmojis, numberOfPairsOfCards))
-        themes.append(createTheme("Hearts", heartEmojis, numberOfPairsOfCards))
-        themes.append(createTheme("Sports", sportsEmojis, numberOfPairsOfCards))
-        themes.append(createTheme("Weather", weatherEmojis, numberOfPairsOfCards))
-        return themes
-    }()
-    
-    private static func getTheme() -> Theme {
-        return EmojiMemoryGame.themes.randomElement()!
-    }
-    
-    private static func getColor(_ chosenColor: String) -> Color {
-        switch chosenColor {
-        case "black":
-            return .black
-        case "gray":
-            return .gray
-        case "red":
-            return .red
-        case "green":
-            return .green
-        case "blue":
-            return .blue
-        case "orange":
-            return .orange
-        case "yellow":
-            return .yellow
-        case "pink":
-            return .pink
-        case "purple":
-            return .purple
-        default:
-            return .red
-        }
-    }
-    
-    private(set) var theme: Theme
-    private(set) var color: Color?
     @Published private var model: MemoryGame<String>
+    let theme: Theme
     
-    init() {
-        theme = EmojiMemoryGame.getTheme()
-        model = EmojiMemoryGame.createMemoryGame(of: theme)
-        color = EmojiMemoryGame.getColor(theme.color)
+    static func createMemoryGame(of theme: Theme) -> MemoryGame<String> {
+        let emojis = theme.emojis.map { String($0) }.shuffled()
+        
+        return MemoryGame(numberOfPairsOfCards: theme.numberOfPairsOfCards) { index in
+            
+            if index < emojis.count {
+                return emojis[index]
+            } else {
+                return ""
+            }
+        }
     }
     
-    var cards: [Card]  {
+    init(theme: Theme) {
+        self.theme = theme
+        self.model = EmojiMemoryGame.createMemoryGame(of: theme)
+    }
+    
+    var cards: [MemoryGame<String>.Card] {
         model.cards
     }
     
-    var points: Int {
-        model.points
-    }
-    
-    // MARK: Intent(s)
-    
-    func choose(_ card: Card) {
+    func choose(_ card: MemoryGame<String>.Card) {
         model.choose(card)
     }
     
-    func createNewGame() -> Void {
-        theme = EmojiMemoryGame.getTheme()
+    func startNewGame() {
         model = EmojiMemoryGame.createMemoryGame(of: theme)
-        color = EmojiMemoryGame.getColor(theme.color)
     }
     
-    func shuffle() -> Void {
+    func shuffle() {
         model.shuffle()
     }
 }

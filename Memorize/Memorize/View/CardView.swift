@@ -57,10 +57,10 @@ struct CardView: View {
 }
 
 
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        let game = EmojiMemoryGame()
-        //        game.choose(game.cards.first!)
-        return CardView(card: game.cards[0], color: .red)
-    }
-}
+//struct CardView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let game = EmojiMemoryGame()
+//        //        game.choose(game.cards.first!)
+//        return CardView(card: game.cards[0], color: .red)
+//    }
+//}

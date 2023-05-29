@@ -9,27 +9,21 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     
-    @ObservedObject var game = EmojiMemoryGame()
+    @ObservedObject var game: EmojiMemoryGame
+    var theme: Theme
     @State private var dealt = Set<Int>()
     @Namespace private var dealingNamespace
     
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack {
-                
-                Text("Memorize \(game.theme.name)!")
-                    .font(.largeTitle)
-                Text("Score: \(game.points)")
-                
                 gameBody
-                
                 gameButtons
-                
             }
-            
             deckBody
         }
-        .foregroundColor(game.color)
+        .navigationTitle(Text(theme.name))
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     var gameBody: some View {
@@ -38,20 +32,20 @@ struct EmojiMemoryGameView: View {
             cardView(for: card)
                 .transition(.asymmetric(insertion: .identity, removal: .scale))
         })
-        .foregroundColor(game.color ?? CardConstants.color)
+        .foregroundColor(Color(rgbaColor: theme.color))
         .padding(.horizontal)
     }
     
     var deckBody: some View {
         ZStack {
             ForEach(game.cards.filter(isUndealt)) { card in
-                CardView(card: card, color: game.color ?? .red)
+                CardView(card: card, color: Color(rgbaColor: theme.color))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .identity , removal: .scale))
             }
         }
         .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
-        .foregroundColor(game.color ?? CardConstants.color)
+        .foregroundColor(Color(rgbaColor: theme.color))
         .onTapGesture {
             for card in game.cards {
                 withAnimation(dealAnimation(for: card)) {
@@ -66,7 +60,7 @@ struct EmojiMemoryGameView: View {
             Button("New Game") {
                 withAnimation {
                     dealt = []
-                    game.createNewGame()
+                    game.startNewGame()
                 }
             }
             Spacer()
@@ -103,7 +97,7 @@ struct EmojiMemoryGameView: View {
         if isUndealt(card) || (card.isMatched && !card.isFaceUp) {
             Color.clear
         } else {
-            CardView(card: card, color: game.color ?? .red)
+            CardView(card: card, color: Color(rgbaColor: theme.color))
                 .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                 .padding(4)
                 .transition(.scale).animation(.easeInOut(duration: 1), value: isUndealt(card))
@@ -127,11 +121,25 @@ struct EmojiMemoryGameView: View {
     }
 }
 
+struct NavigationConfigurator: UIViewControllerRepresentable {
+    var configure: (UINavigationController) -> Void = { _ in }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        let game = EmojiMemoryGame()
-        return EmojiMemoryGameView(game: game)
-            .preferredColorScheme(.light)
+    func makeUIViewController(context: UIViewControllerRepresentableContext<NavigationConfigurator>) -> UIViewController {
+        UIViewController()
     }
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<NavigationConfigurator>) {
+        if let nc = uiViewController.navigationController {
+            self.configure(nc)
+        }
+    }
+
 }
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let game = EmojiMemoryGame(theme: ThemeStore(named: "default").themes[0])
+//        EmojiMemoryGameView(game: game)
+//            .preferredColorScheme(.dark)
+//        EmojiMemoryGameView(game: game)
+//            .preferredColorScheme(.light)
+//    }
+//}
