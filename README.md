@@ -2,6 +2,10 @@
 
 Coursework for Stanford CS193p: Developing Apps for iOS
 
+## Assignment 6: Memorize (Completed)
+![Simulator Screen Recording - iPhone 14 Pro - 2023-05-29 at 18 36 00](https://github.com/TareqMia/Stanford-CS193p/assets/39747003/4cb08975-81e2-4122-86a1-df56e467fa31)
+
+
 ## Assignemnt 5: EmojiArt
 ![Simulator Screen Shot - iPad Pro (11-inch) (4th generation) - 2023-05-27 at 21 31 46](https://github.com/TareqMia/Stanford-CS193p/assets/39747003/4e85d8ec-c5e3-4987-8fe4-55c7739ab606)
 
